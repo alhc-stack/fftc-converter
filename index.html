@@ -28,11 +28,13 @@
       justify-content: space-between;
       margin-bottom: 10px;
       gap: 10px;
+      align-items: flex-end;
     }
     .row input, .row select {
       width: 48%;
       padding: 12px;
       font-size: 16px;
+      height: 44px;
     }
     .row-item {
       flex: 1;
@@ -80,6 +82,7 @@
       cursor: pointer;
       white-space: nowrap;
       font-weight: 600;
+      display: flex;
     }
     .copy-btn:hover {
       background-color: #0b7dda;
@@ -110,6 +113,7 @@
       cursor: pointer;
       margin-top: 15px;
       font-weight: 600;
+      display: none;
     }
     button:hover {
       background-color: #45a049;
@@ -123,6 +127,7 @@
       border-radius: 8px;
       border: 1px solid #ccc;
       background-color: white;
+      height: 44px;
     }
     input, select {
       border: 1px solid #ccc;
@@ -132,6 +137,7 @@
     input {
       padding: 12px;
       font-size: 16px;
+      height: 44px;
     }
     .full-width-input {
       width: 100%;
@@ -139,6 +145,7 @@
       font-size: 16px;
       margin-bottom: 10px;
       box-sizing: border-box;
+      height: 44px;
     }
     
     /* Mobile optimizations */
@@ -188,14 +195,14 @@
     <div class="row">
       <div class="row-item">
         <label for="fpsSelect">Frame Rate</label>
-        <select id="fpsSelect" style="width: 100%;">
+        <select id="fpsSelect" onchange="autoConvert()" style="width: 100%;">
           <option value="23.98/24">23.98/24</option>
           <option value="25">25</option>
         </select>
       </div>
       <div class="row-item">
         <label for="reel">Reel Number</label>
-        <input type="number" id="reel" placeholder="0, 1, 2..." value="1" style="width: 100%;">
+        <input type="number" id="reel" placeholder="0, 1, 2..." value="1" oninput="autoConvert()" style="width: 100%;">
       </div>
     </div>
   </div>
@@ -203,8 +210,8 @@
   <!-- Footage to Timecode -->
   <div id="ftc-section" class="section">
     <div class="row">
-      <input type="number" id="footage" placeholder="Footage" min="0" onkeypress="handleEnterKey(event, 'ftc')">
-      <input type="number" id="frames" placeholder="Frames (0-15)" min="0" max="15" onkeypress="handleEnterKey(event, 'ftc')">
+      <input type="number" id="footage" placeholder="Footage" min="0" oninput="autoConvert()" onkeypress="handleEnterKey(event, 'ftc')">
+      <input type="number" id="frames" placeholder="Frames (0-15)" min="0" max="15" oninput="autoConvert()" onkeypress="handleEnterKey(event, 'ftc')">
     </div>
     <button onclick="convertToTimecode()">Convert</button>
     <div class="output" id="result1">HH:MM:SS:FF</div>
@@ -217,7 +224,7 @@
 
   <!-- Timecode to Footage -->
   <div id="ctf-section" class="section" style="display:none;">
-    <input type="text" id="timecode" placeholder="HH:MM:SS:FF or 8 digits" class="full-width-input" maxlength="11" oninput="formatTimecode(this)" onkeypress="handleEnterKey(event, 'ctf')">
+    <input type="text" id="timecode" placeholder="HH:MM:SS:FF or 8 digits" class="full-width-input" maxlength="11" oninput="formatTimecodeAndConvert(this)" onkeypress="handleEnterKey(event, 'ctf')">
     <button onclick="convertToFootage()">Convert</button>
     <div class="output" id="result2">Footage + Frames</div>
     <div class="copy-buttons">
@@ -232,6 +239,16 @@
       const mode = document.getElementById('mode').value;
       document.getElementById('ftc-section').style.display = (mode === 'ftc') ? 'block' : 'none';
       document.getElementById('ctf-section').style.display = (mode === 'ctf') ? 'block' : 'none';
+      autoConvert();
+    }
+
+    function autoConvert() {
+      const mode = document.getElementById('mode').value;
+      if (mode === 'ftc') {
+        convertToTimecode();
+      } else if (mode === 'ctf') {
+        convertToFootage();
+      }
     }
 
     function handleEnterKey(event, mode) {
@@ -308,6 +325,11 @@
       input.value = formatted;
     }
 
+    function formatTimecodeAndConvert(input) {
+      formatTimecode(input);
+      autoConvert();
+    }
+
     function convertToTimecode() {
       try {
         let footage = parseInt(document.getElementById('footage').value) || 0;
@@ -345,7 +367,7 @@
         const reel = parseInt(document.getElementById('reel').value) || 1;
 
         if (!timecode) {
-          alert('Please enter a timecode');
+          document.getElementById('result2').textContent = 'Footage + Frames';
           return;
         }
 
