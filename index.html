@@ -39,6 +39,20 @@
     .row-item {
       flex: 1;
     }
+    .input-with-plus {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .input-with-plus input {
+      flex: 1;
+    }
+    .plus-sign {
+      font-size: 24px;
+      font-weight: bold;
+      color: #666;
+      line-height: 44px;
+    }
     label {
       display: block;
       margin-bottom: 8px;
@@ -65,6 +79,10 @@
       display: flex;
       align-items: center;
       justify-content: center;
+    }
+    .output.error {
+      color: #f44336;
+      font-size: 16px;
     }
     .copy-buttons {
       display: flex;
@@ -165,6 +183,9 @@
         padding: 14px;
         min-height: 55px;
       }
+      .output.error {
+        font-size: 14px;
+      }
       button {
         padding: 12px;
         font-size: 16px;
@@ -176,6 +197,9 @@
       label {
         font-size: 13px;
         margin-bottom: 6px;
+      }
+      .plus-sign {
+        font-size: 20px;
       }
     }
   </style>
@@ -202,16 +226,17 @@
       </div>
       <div class="row-item">
         <label for="reel">Reel Number</label>
-        <input type="number" id="reel" placeholder="0, 1, 2..." value="1" oninput="autoConvert()" style="width: 100%;">
+        <input type="number" id="reel" placeholder="0, 1, 2..." value="1" min="0" oninput="autoConvert()" onkeydown="preventInvalidChars(event)" style="width: 100%;">
       </div>
     </div>
   </div>
 
   <!-- Footage to Timecode -->
   <div id="ftc-section" class="section">
-    <div class="row">
-      <input type="number" id="footage" placeholder="Footage" min="0" oninput="autoConvert()" onkeypress="handleEnterKey(event, 'ftc')">
-      <input type="number" id="frames" placeholder="Frames (0-15)" min="0" max="15" oninput="autoConvert()" onkeypress="handleEnterKey(event, 'ftc')">
+    <div class="input-with-plus">
+      <input type="number" id="feet" placeholder="Feet" min="0" oninput="autoConvert()" onkeypress="handleEnterKey(event, 'ftc')" onkeydown="preventInvalidChars(event)">
+      <span class="plus-sign">+</span>
+      <input type="number" id="frames" placeholder="Frames (0-15)" min="0" max="15" oninput="autoConvert()" onkeypress="handleEnterKey(event, 'ftc')" onkeydown="preventInvalidChars(event)">
     </div>
     <button onclick="convertToTimecode()">Convert</button>
     <div class="output" id="result1">HH:MM:SS:FF</div>
@@ -226,7 +251,7 @@
   <div id="ctf-section" class="section" style="display:none;">
     <input type="text" id="timecode" placeholder="HH:MM:SS:FF or 8 digits" class="full-width-input" maxlength="11" oninput="formatTimecodeAndConvert(this)" onkeypress="handleEnterKey(event, 'ctf')">
     <button onclick="convertToFootage()">Convert</button>
-    <div class="output" id="result2">Footage + Frames</div>
+    <div class="output" id="result2">Feet+Frames</div>
     <div class="copy-buttons">
       <button class="copy-btn" onclick="copyToClipboard('result2', 'copyMsg2', false)">Copy</button>
       <button class="copy-btn" onclick="copyToClipboard('result2', 'copyMsg2', true)">Copy Value Only</button>
@@ -235,6 +260,13 @@
   </div>
 
   <script>
+    function preventInvalidChars(e) {
+      // Prevent: e, E, +, -, . (decimal point)
+      if (['e', 'E', '+', '-', '.'].includes(e.key)) {
+        e.preventDefault();
+      }
+    }
+
     function toggleMode() {
       const mode = document.getElementById('mode').value;
       document.getElementById('ftc-section').style.display = (mode === 'ftc') ? 'block' : 'none';
@@ -267,7 +299,7 @@
       const messageElement = document.getElementById(messageId);
       
       // Don't copy placeholder text or error messages
-      if (resultText === 'HH:MM:SS:FF' || resultText === 'Footage + Frames' || resultText.startsWith('Error:')) {
+      if (resultText === 'HH:MM:SS:FF' || resultText === 'Feet+Frames' || resultText.startsWith('Error:') || resultText.startsWith('Invalid')) {
         return;
       }
 
@@ -330,44 +362,103 @@
       autoConvert();
     }
 
+    function isValidInteger(value) {
+      // Check if the string contains only digits (and optional leading minus for checking negatives)
+      // Also reject values containing 'e', 'E', '.', or '+'
+      if (typeof value !== 'string') return false;
+      if (value === '') return true; // Empty is valid (will default to 0)
+      if (/[eE\.\+\-]/.test(value)) return false; // Reject scientific notation, decimals, plus and minus signs
+      const num = Number(value);
+      return Number.isInteger(num) && num >= 0;
+    }
+
     function convertToTimecode() {
+      const resultElement = document.getElementById('result1');
+      
       try {
-        let footage = parseInt(document.getElementById('footage').value) || 0;
-        let frames = parseInt(document.getElementById('frames').value) || 0;
+        const feetInput = document.getElementById('feet').value.trim();
+        const framesInput = document.getElementById('frames').value.trim();
+        const reelInput = document.getElementById('reel').value.trim();
         const fpsOption = document.getElementById('fpsSelect').value;
-        const reel = parseInt(document.getElementById('reel').value) || 1;
+        
+        // Validate reel number (must not be empty and must be a valid integer)
+        if (reelInput === '' || !isValidInteger(reelInput)) {
+          resultElement.textContent = 'Invalid Footage Input';
+          resultElement.classList.add('error');
+          return;
+        }
+        
+        const reel = parseInt(reelInput);
+        
+        // Empty feet and frames is okay (defaults to 0)
+        let feet = 0;
+        let frames = 0;
+        
+        // Validate feet if not empty
+        if (feetInput !== '') {
+          if (!isValidInteger(feetInput)) {
+            resultElement.textContent = 'Invalid Footage Input';
+            resultElement.classList.add('error');
+            return;
+          }
+          feet = parseInt(feetInput);
+        }
+        
+        // Validate frames if not empty
+        if (framesInput !== '') {
+          if (!isValidInteger(framesInput)) {
+            resultElement.textContent = 'Invalid Footage Input';
+            resultElement.classList.add('error');
+            return;
+          }
+          frames = parseInt(framesInput);
+          
+          // Check if frames > 15
+          if (frames > 15) {
+            resultElement.textContent = 'Invalid Footage Input';
+            resultElement.classList.add('error');
+            return;
+          }
+        }
         
         // Determine FPS based on option
         const fps = (fpsOption === '23.98/24') ? 24 : 25;
 
-        // Validate frames doesn't exceed 15 (since footage is 16 frames)
-        if (frames > 15) {
-          const additionalFootage = Math.floor(frames / 16);
-          footage += additionalFootage;
-          frames = frames % 16;
-        }
-
-        const totalFrames = footage * 16 + frames;
+        const totalFrames = feet * 16 + frames;
         const hh = Math.floor(totalFrames / (fps * 3600)) + reel;
         const mm = Math.floor((totalFrames / (fps * 60)) % 60);
         const ss = Math.floor((totalFrames / fps) % 60);
         const ff = totalFrames % fps;
 
         const result = `${String(hh).padStart(2, '0')}:${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}:${String(ff).padStart(2, '0')}`;
-        document.getElementById('result1').textContent = result;
+        resultElement.textContent = result;
+        resultElement.classList.remove('error');
       } catch (error) {
-        document.getElementById('result1').textContent = 'Error: ' + error.message;
+        resultElement.textContent = 'Invalid Footage Input';
+        resultElement.classList.add('error');
       }
     }
 
     function convertToFootage() {
+      const resultElement = document.getElementById('result2');
+      
       try {
         const timecode = document.getElementById('timecode').value.trim();
         const fpsOption = document.getElementById('fpsSelect').value;
-        const reel = parseInt(document.getElementById('reel').value) || 1;
+        const reelInput = document.getElementById('reel').value.trim();
+
+        // Validate reel number (must not be empty and must be a valid integer)
+        if (reelInput === '' || !isValidInteger(reelInput)) {
+          resultElement.textContent = 'Invalid Timecode Input';
+          resultElement.classList.add('error');
+          return;
+        }
+        
+        const reel = parseInt(reelInput);
 
         if (!timecode) {
-          document.getElementById('result2').textContent = 'Footage + Frames';
+          resultElement.textContent = 'Feet+Frames';
+          resultElement.classList.remove('error');
           return;
         }
 
@@ -378,15 +469,24 @@
 
         // Validate timecode format
         if (parts.length !== 4 || parts.some(isNaN)) {
-          document.getElementById('result2').textContent = 'Error: Invalid timecode format (use HH:MM:SS:FF)';
+          resultElement.textContent = 'Error: Invalid timecode format (use HH:MM:SS:FF)';
+          resultElement.classList.add('error');
           return;
         }
 
         const [hh, mm, ss, ff] = parts;
 
+        // Validate that reel number is not larger than HH
+        if (reel > hh) {
+          resultElement.textContent = 'Invalid Timecode Input';
+          resultElement.classList.add('error');
+          return;
+        }
+
         // Validate frame count doesn't exceed FPS
         if (ff >= fps) {
-          document.getElementById('result2').textContent = `Error: Frame value (${ff}) exceeds FPS (${fps})`;
+          resultElement.textContent = `Error: Frame value (${ff}) exceeds FPS (${fps})`;
+          resultElement.classList.add('error');
           return;
         }
 
@@ -395,17 +495,20 @@
         const totalFrames = adjustedHours * fps * 3600 + mm * fps * 60 + ss * fps + ff;
 
         if (totalFrames < 0) {
-          document.getElementById('result2').textContent = 'Error: Timecode is before reel start';
+          resultElement.textContent = 'Error: Timecode is before reel start';
+          resultElement.classList.add('error');
           return;
         }
 
-        const footage = Math.floor(totalFrames / 16);
+        const feet = Math.floor(totalFrames / 16);
         const frames = totalFrames % 16;
 
-        const result = `${footage}+${String(frames).padStart(2, '0')}`;
-        document.getElementById('result2').textContent = result;
+        const result = `${feet}+${String(frames).padStart(2, '0')}`;
+        resultElement.textContent = result;
+        resultElement.classList.remove('error');
       } catch (error) {
-        document.getElementById('result2').textContent = 'Error: ' + error.message;
+        resultElement.textContent = 'Invalid Timecode Input';
+        resultElement.classList.add('error');
       }
     }
   </script>
