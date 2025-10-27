@@ -85,7 +85,7 @@
       justify-content: center;
     }
     .output.error {
-      color: #f44336;
+      color: #d63230;
       font-size: 16px;
     }
     .copy-buttons {
@@ -97,7 +97,7 @@
       flex: 1;
       padding: 12px 10px;
       font-size: 14px;
-      background-color: #2196F3;
+      background-color: #118ab2;
       color: white;
       border: none;
       border-radius: 8px;
@@ -105,21 +105,24 @@
       white-space: nowrap;
       font-weight: 600;
       display: flex;
+      justify-content: center;
+      align-items: center; 
+
     }
     .copy-btn:hover {
-      background-color: #0b7dda;
+      background-color: #10779a;
     }
     .copy-btn:active {
-      background-color: #0a6bc5;
+      background-color: #10779a;
       transform: scale(0.98);
     }
     .copy-btn.copied {
-      background-color: #4CAF50;
+      background-color: #20bf55;
     }
     .copy-message {
       text-align: center;
       font-size: 13px;
-      color: #4CAF50;
+      color: #20bf55;
       margin-top: 8px;
       min-height: 20px;
       font-weight: bold;
@@ -128,7 +131,7 @@
       width: 100%;
       padding: 14px;
       font-size: 18px;
-      background-color: #4CAF50;
+      background-color: #20bf55;
       color: white;
       border: none;
       border-radius: 8px;
@@ -138,7 +141,7 @@
       display: none;
     }
     button:hover {
-      background-color: #45a049;
+      background-color: #1da54a;
     }
     button:active {
       transform: scale(0.98);
@@ -325,11 +328,11 @@
       }).catch(function(err) {
         console.error('Failed to copy:', err);
         messageElement.textContent = 'Failed to copy';
-        messageElement.style.color = '#f44336';
+        messageElement.style.color = '#d63230';
         
         setTimeout(function() {
           messageElement.textContent = '';
-          messageElement.style.color = '#4CAF50';
+          messageElement.style.color = '#20bf55';
         }, 2000);
       });
     }
