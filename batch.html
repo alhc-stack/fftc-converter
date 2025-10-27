@@ -81,31 +81,31 @@
       font-weight: 600;
     }
     .convert-btn {
-      background-color: #4CAF50;
+      background-color: #20bf55;
     }
     .convert-btn:hover {
-      background-color: #45a049;
+      background-color: #1da54a;
     }
     .clear-btn {
-      background-color: #f44336;
+      background-color: #d63230;
       flex: 0.3;
     }
     .clear-btn:hover {
-      background-color: #da190b;
+      background-color: #ba170b;
     }
     .export-btn {
-      background-color: #2196F3;
+      background-color: #118ab2;
       flex: 0.5;
     }
     .export-btn:hover {
-      background-color: #0b7dda;
+      background-color: #10779a;
     }
     .copy-btn {
-      background-color: #FF9800;
+      background-color: #f39237;
       flex: 0.5;
     }
     .copy-btn:hover {
-      background-color: #e68900;
+      background-color: #dd832e;
     }
     button:active {
       transform: scale(0.98);
@@ -151,11 +151,11 @@
       background-color: #f9f9f9;
     }
     .status-success {
-      color: #4CAF50;
+      color: #20bf55;
       font-weight: bold;
     }
     .status-error {
-      color: #f44336;
+      color: #d63230;
       font-weight: bold;
     }
     .help-text {
@@ -371,7 +371,7 @@
 
       // Update summary
       const total = successCount + errorCount;
-      summary.innerHTML = `Total: ${total} | Success: <span style="color: #4CAF50;">${successCount}</span> | Errors: <span style="color: #f44336;">${errorCount}</span>`;
+      summary.innerHTML = `Total: ${total} | Success: <span style="color: #20bf55;">${successCount}</span> | Errors: <span style="color: #d63230;">${errorCount}</span>`;
       
       if (errorCount === 0) {
         summary.className = 'summary success';
