@@ -221,17 +221,18 @@
       }
       .input-header {
         flex-direction: column;
-        align-items: stretch; /* CHANGED from flex-start */
+        align-items: stretch;
         gap: 8px;
       }
       #feetOnlyLabel {
         font-size: 14px !important;
-        padding: 8px;
-        background-color: #f5f5f5;
-        border-radius: 6px;
-        width: 100%; /* This should now work */
-        justify-content: flex-start;
-        box-sizing: border-box;
+        padding: 8px !important;
+        background-color: #f5f5f5 !important;
+        border-radius: 6px !important;
+        width: 100% !important;
+        justify-content: flex-start !important;
+        box-sizing: border-box !important;
+        white-space: normal !important; /* Override the inline nowrap */
       }
       textarea {
         min-height: 150px;
