@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#f0f0f0">
@@ -12,6 +13,7 @@
     * {
       box-sizing: border-box;
     }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
       padding: 20px;
@@ -19,26 +21,31 @@
       margin: auto;
       background-color: #f5f5f5;
     }
+
     h2 {
       text-align: center;
       margin-bottom: 10px;
       font-size: 24px;
     }
+
     .subtitle {
       text-align: center;
       color: #666;
       margin-bottom: 20px;
       font-size: 14px;
     }
+
     .row {
       display: flex;
       gap: 10px;
       margin-bottom: 15px;
       align-items: flex-end;
     }
+
     .row-item {
       flex: 1;
     }
+
     label {
       display: flex;
       align-items: flex-end;
@@ -47,6 +54,7 @@
       font-weight: bold;
       font-size: 16px;
     }
+
     .section {
       margin-top: 20px;
       padding: 20px;
@@ -54,7 +62,9 @@
       background-color: #ffffff;
       box-shadow: 0 2px 8px #0000001a;
     }
-    select, input {
+
+    select,
+    input {
       width: 100%;
       padding: 12px;
       font-size: 16px;
@@ -62,6 +72,7 @@
       border: 1px solid #ccc;
       background-color: white;
     }
+
     textarea {
       width: 100%;
       min-height: 200px;
@@ -72,17 +83,20 @@
       border: 1px solid #ccc;
       resize: vertical;
     }
+
     .input-header {
       display: flex;
       align-items: last baseline;
       gap: 10px;
       margin-bottom: 8px;
     }
+
     .button-group {
       display: flex;
       gap: 10px;
       margin-top: 15px;
     }
+
     button {
       flex: 1;
       padding: 14px;
@@ -93,40 +107,51 @@
       cursor: pointer;
       font-weight: 600;
     }
+
     .convert-btn {
       background-color: #20bf55;
     }
+
     .convert-btn:hover {
       background-color: #1da54a;
     }
+
     .clear-btn {
       background-color: #d63230;
       flex: 0.3;
     }
+
     .clear-btn:hover {
       background-color: #ba170b;
     }
+
     .export-btn {
       background-color: #118ab2;
       flex: 0.5;
     }
+
     .export-btn:hover {
       background-color: #10779a;
     }
+
     .copy-btn {
       background-color: #f39237;
       flex: 0.5;
     }
+
     .copy-btn:hover {
       background-color: #dd832e;
     }
+
     button:active {
       transform: scale(0.98);
     }
+
     .results-section {
       margin-top: 20px;
       display: none;
     }
+
     .summary {
       padding: 15px;
       background-color: #e3f2fd;
@@ -134,48 +159,59 @@
       margin-bottom: 15px;
       font-weight: bold;
     }
+
     .summary.error {
       background-color: #ffebee;
       color: #c62828;
     }
+
     .summary.success {
       background-color: #e8f5e9;
       color: #2e7d32;
     }
+
     table {
       width: 100%;
       border-collapse: collapse;
       background-color: white;
       border-radius: 8px;
       overflow: hidden;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    th, td {
+
+    th,
+    td {
       padding: 12px;
       text-align: left;
       border-bottom: 1px solid #ddd;
     }
+
     th {
       background-color: #f5f5f5;
       font-weight: bold;
       color: #333;
     }
+
     tr:hover {
       background-color: #f9f9f9;
     }
+
     .status-success {
       color: #20bf55;
       font-weight: bold;
     }
+
     .status-error {
       color: #d63230;
       font-weight: bold;
     }
+
     .help-text {
       font-size: 13px;
       color: #666;
       margin-top: 5px;
     }
+
     .message {
       padding: 12px;
       border-radius: 8px;
@@ -183,10 +219,12 @@
       text-align: center;
       font-weight: bold;
     }
+
     .message.success {
       background-color: #e8f5e9;
       color: #2e7d32;
     }
+
     .message.error {
       background-color: #ffebee;
       color: #c62828;
@@ -197,33 +235,41 @@
       body {
         padding: 15px;
       }
+
       h2 {
         font-size: 20px;
         margin-bottom: 10px;
       }
+
       .subtitle {
         font-size: 13px;
         margin-bottom: 15px;
       }
+
       .section {
         padding: 15px;
       }
+
       .row {
         flex-direction: column;
         gap: 0;
       }
+
       .row-item {
         width: 100%;
         margin-bottom: 10px;
       }
+
       label {
         font-size: 14px;
       }
+
       .input-header {
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
       }
+
       #feetOnlyLabel {
         font-size: 14px !important;
         padding: 9px !important;
@@ -232,59 +278,39 @@
         text-align: right !important;
         align-self: flex-start !important;
       }
+
       textarea {
         min-height: 150px;
         font-size: 13px;
       }
+
       .help-text {
         font-size: 12px;
       }
+
       button {
         padding: 12px;
         font-size: 15px;
       }
+
       .clear-btn {
         flex: 0.4;
       }
-      th, td {
+
+      th,
+      td {
         padding: 8px;
         font-size: 13px;
       }
+
       .summary {
         padding: 12px;
         font-size: 14px;
       }
     }
-    /*
-    @media (max-width: 480px) {
-      body {
-        padding: 10px;
-      }
-      h2 {
-        font-size: 18px;
-      }
-      .section {
-        padding: 12px;
-        margin-top: 15px;
-      }
-      label {
-        font-size: 13px;
-      }
-      #feetOnlyLabel {
-        font-size: 13px !important;
-      }
-      th, td {
-        padding: 6px;
-        font-size: 12px;
-      }
-      .copy-btn, .export-btn {
-        font-size: 13px;
-        padding: 10px 8px;
-      }
-    }
-    */
   </style>
 </head>
+
 <body>
   <h2>Batch Footage ↔ Timecode Converter</h2>
   <p class="subtitle">Convert multiple values at once</p>
@@ -317,7 +343,8 @@
   <div class="section">
     <div class="input-header">
       <label for="input" style="margin: 0;">Input (one per line)</label>
-      <label id="feetOnlyLabel" style="display: flex; align-items: center; gap: 5px; font-weight: normal; font-size: 16px; margin: 0; cursor: pointer; white-space: nowrap;">
+      <label id="feetOnlyLabel"
+        style="display: flex; align-items: center; gap: 5px; font-weight: normal; font-size: 16px; margin: 0; cursor: pointer; white-space: nowrap;">
         <input type="checkbox" id="feetOnly" onchange="updateHelpText()" style="cursor: pointer;">
         Feet Only (no frames)
       </label>
@@ -356,7 +383,7 @@
 
   <script>
     // Update format help text when mode changes
-    document.getElementById('mode').addEventListener('change', function() {
+    document.getElementById('mode').addEventListener('change', function () {
       updateHelpText();
     });
 
@@ -366,7 +393,7 @@
       const feetOnly = document.getElementById('feetOnly');
       const feetOnlyLabel = document.getElementById('feetOnlyLabel');
       const helpText = document.getElementById('formatHelp');
-      
+
       if (mode === 'ftc') {
         if (feetOnly && feetOnly.checked) {
           helpText.textContent = 'Format: Feet only (e.g., 100, 250, 1350)';
@@ -450,9 +477,9 @@
             // Check if "Feet Only" mode is enabled
             const feetOnlyCheckbox = document.getElementById('feetOnly');
             const isFeetOnly = feetOnlyCheckbox && feetOnlyCheckbox.checked;
-            
+
             let feet, frames;
-            
+
             if (isFeetOnly) {
               // Feet Only mode: accept just numbers
               const feetMatch = trimmedLine.match(/^\d+$/);
@@ -470,12 +497,12 @@
               }
               feet = parseInt(match[1]);
               frames = parseInt(match[2]);
-              
+
               if (frames > 15) {
                 throw new Error('Frames > 15');
               }
             }
-            
+
             output = convertFootageToTimecode(feet, frames, fps, reel);
             status = '✓ Success';
             successCount++;
@@ -517,7 +544,7 @@
       // Update summary
       const total = successCount + errorCount;
       summary.innerHTML = `Total: ${total} | Success: <span style="color: #20bf55;">${successCount}</span> | Errors: <span style="color: #d63230;">${errorCount}</span>`;
-      
+
       if (errorCount === 0) {
         summary.className = 'summary success';
       } else if (successCount === 0) {
@@ -549,7 +576,7 @@
     function copyResults() {
       const table = document.getElementById('resultsTable');
       let text = '';
-      
+
       // Copy as tab-separated values (works well with Excel)
       for (let row of table.rows) {
         let rowData = [];
@@ -586,16 +613,17 @@
       const pad = (str, len) => String(str).padEnd(len, ' ');
 
       const header =
-      pad('#', numWidth) +'\t'+ pad('Input', inputWidth)+'\t'+ pad('Output', outputWidth)+'\t'+ pad('Status', statusWidth);
+        pad('#', numWidth) + '\t' + pad('Input', inputWidth) + '\t' + pad('Output', outputWidth) + '\t' + pad('Status', statusWidth);
 
       txt += header + '\n';
 
       window.batchResults.forEach(result => {
-      const num = pad(result.number, numWidth);
-      const input = pad(result.input, inputWidth);
-      const output = pad(result.output, outputWidth);
-      const status = pad(result.status, statusWidth);
-      txt += `${num}\t${input}\t${output}\t${status}\n`;});
+        const num = pad(result.number, numWidth);
+        const input = pad(result.input, inputWidth);
+        const output = pad(result.output, outputWidth);
+        const status = pad(result.status, statusWidth);
+        txt += `${num}\t${input}\t${output}\t${status}\n`;
+      });
 
       const now = new Date();
       const yyyy = now.getFullYear();
@@ -606,7 +634,7 @@
 
       const timestamp = `${yyyy}-${mm}-${dd}_${hh}-${min}`;
       const filename = `batch-conversion_${timestamp}.txt`;
-      
+
       downloadFile(txt, filename, 'text/plain');
       showMessage('TXT file downloaded!', 'success');
     }
@@ -642,9 +670,10 @@
     }
 
     // Initialize help text on page load
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
       updateHelpText();
     });
   </script>
 </body>
+
 </html>
