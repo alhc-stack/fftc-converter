@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#f0f0f0">
-  <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
-  <link rel="apple-touch-icon" href="icon-512.png">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Batch Footage ↔ Timecode Converter</title>
@@ -34,6 +30,7 @@
       display: flex;
       gap: 10px;
       margin-bottom: 15px;
+      align-items: flex-end;
     }
     .row-item {
       flex: 1;
@@ -44,7 +41,7 @@
       min-height: 2.5em;
       margin-bottom: 8px;
       font-weight: bold;
-      font-size: 14px;
+      font-size: 16px;
     }
     .section {
       margin-top: 20px;
@@ -165,7 +162,7 @@
       font-weight: bold;
     }
     .help-text {
-      font-size: 12px;
+      font-size: 13px;
       color: #666;
       margin-top: 5px;
     }
@@ -184,7 +181,8 @@
       background-color: #ffebee;
       color: #c62828;
     }
-            /* Mobile optimizations */
+
+    /* Mobile optimizations */
     @media (max-width: 480px) {
       body {
         padding: 15px;
@@ -220,6 +218,7 @@
         font-size: 20px;
       }
     }
+
   </style>
 </head>
 <body>
@@ -252,7 +251,13 @@
 
   <!-- Input Section -->
   <div class="section">
-    <label for="input">Input (one per line)</label>
+    <div style="display: flex; align-items: last baseline; gap: 10px; margin-bottom: 8px;">
+      <label for="input" style="margin: 0;">Input (one per line)</label>
+      <label id="feetOnlyLabel" style="display: flex; align-items: center; gap: 5px; font-weight: normal; font-size: 16px; margin: 0; cursor: pointer; white-space: nowrap;">
+        <input type="checkbox" id="feetOnly" onchange="updateHelpText()" style="cursor: pointer;">
+        Feet Only (no frames)
+      </label>
+    </div>
     <p class="help-text" id="formatHelp">Format: Feet+Frames (e.g., 100+05, 250+12, 0+08)</p>
     <textarea id="input" placeholder="Enter values here, one per line..."></textarea>
     <div class="button-group">
@@ -288,14 +293,30 @@
   <script>
     // Update format help text when mode changes
     document.getElementById('mode').addEventListener('change', function() {
-      const mode = this.value;
+      updateHelpText();
+    });
+
+    // Update help text based on mode and feetOnly checkbox
+    function updateHelpText() {
+      const mode = document.getElementById('mode').value;
+      const feetOnly = document.getElementById('feetOnly');
+      const feetOnlyLabel = document.getElementById('feetOnlyLabel');
       const helpText = document.getElementById('formatHelp');
+      
       if (mode === 'ftc') {
-        helpText.textContent = 'Format: Feet+Frames (e.g., 100+05, 250+12, 0+08)';
+        if (feetOnly && feetOnly.checked) {
+          helpText.textContent = 'Format: Feet only (e.g., 100, 250, 1350)';
+        } else {
+          helpText.textContent = 'Format: Feet+Frames (e.g., 100+05, 250+12, 0+08)';
+        }
+        // Show checkbox only in footage mode
+        if (feetOnlyLabel) feetOnlyLabel.style.display = 'flex';
       } else {
         helpText.textContent = 'Format: HH:MM:SS:FF (e.g., 01:23:45:12, 00:05:30:00)';
+        // Hide checkbox in timecode mode
+        if (feetOnlyLabel) feetOnlyLabel.style.display = 'none';
       }
-    });
+    }
 
     function isValidInteger(value) {
       if (typeof value !== 'string') return false;
@@ -358,19 +379,37 @@
         let output = '';
         let status = '';
         let error = false;
+        let displayInput = trimmedLine; // This will be shown in the table
 
         try {
           if (mode === 'ftc') {
-            // Footage to Timecode
-            const match = trimmedLine.match(/^(\d+)\+(\d+)$/);
-            if (!match) {
-              throw new Error('Invalid footage format');
-            }
-            const feet = parseInt(match[1]);
-            const frames = parseInt(match[2]);
+            // Check if "Feet Only" mode is enabled
+            const feetOnlyCheckbox = document.getElementById('feetOnly');
+            const isFeetOnly = feetOnlyCheckbox && feetOnlyCheckbox.checked;
             
-            if (frames > 15) {
-              throw new Error('Frames > 15');
+            let feet, frames;
+            
+            if (isFeetOnly) {
+              // Feet Only mode: accept just numbers
+              const feetMatch = trimmedLine.match(/^\d+$/);
+              if (!feetMatch) {
+                throw new Error('Invalid feet format (numbers only)');
+              }
+              feet = parseInt(trimmedLine);
+              frames = 0; // Automatically set frames to 0
+              displayInput = `${feet}+00`; // Add +00 for display
+            } else {
+              // Normal mode: Feet+Frames format
+              const match = trimmedLine.match(/^(\d+)\+(\d+)$/);
+              if (!match) {
+                throw new Error('Invalid footage format');
+              }
+              feet = parseInt(match[1]);
+              frames = parseInt(match[2]);
+              
+              if (frames > 15) {
+                throw new Error('Frames > 15');
+              }
             }
             
             output = convertFootageToTimecode(feet, frames, fps, reel);
@@ -391,7 +430,7 @@
 
         results.push({
           number: index + 1,
-          input: trimmedLine,
+          input: displayInput, // Use displayInput instead of trimmedLine
           output: output,
           fps: fpsOption,
           reel: reel,
@@ -475,7 +514,7 @@
       txt += `Reel: ${reel}\n`;
       txt += '\n';
 
-      // Formattcing Each Column
+      // Formatting Each Column
       const numWidth = Math.max(...window.batchResults.map(r => String(r.number).length)) + 2;
       const inputWidth = Math.max(...window.batchResults.map(r => String(r.input).length)) + 4;
       const outputWidth = Math.max(...window.batchResults.map(r => String(r.output).length)) + 4;
@@ -537,6 +576,11 @@
         messageDiv.className = 'message';
       }, 3000);
     }
+
+    // Initialize help text on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      updateHelpText();
+    });
   </script>
 </body>
 </html>
