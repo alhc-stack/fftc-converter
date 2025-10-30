@@ -221,7 +221,7 @@
       }
       .input-header {
         flex-direction: column;
-        align-items: flex-start;
+        align-items: stretch; /* CHANGED from flex-start */
         gap: 8px;
       }
       #feetOnlyLabel {
@@ -229,11 +229,9 @@
         padding: 8px;
         background-color: #f5f5f5;
         border-radius: 6px;
-        width: 100%;
+        width: 100%; /* This should now work */
         justify-content: flex-start;
-        box-sizing: border-box; /* ADD THIS */
-        flex-shrink: 0; /* ADD THIS */
-        max-width: 100%; /* ADD THIS */
+        box-sizing: border-box;
       }
       textarea {
         min-height: 150px;
