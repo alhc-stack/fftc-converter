@@ -72,6 +72,12 @@
       border: 1px solid #ccc;
       resize: vertical;
     }
+    .input-header {
+      display: flex;
+      align-items: last baseline;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
     .button-group {
       display: flex;
       gap: 10px;
@@ -187,39 +193,93 @@
     }
 
     /* Mobile optimizations */
-    @media (max-width: 480px) {
+    @media (max-width: 768px) {
       body {
         padding: 15px;
       }
       h2 {
         font-size: 20px;
+        margin-bottom: 10px;
+      }
+      .subtitle {
+        font-size: 13px;
         margin-bottom: 15px;
       }
       .section {
-        padding: 12px;
+        padding: 15px;
       }
-      .output {
-        font-size: 20px;
-        padding: 14px;
-        min-height: 55px;
+      .row {
+        flex-direction: column;
+        gap: 0;
       }
-      .output.error {
+      .row-item {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+      label {
         font-size: 14px;
+      }
+      .input-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+      #feetOnlyLabel {
+        font-size: 14px !important;
+        padding: 8px;
+        background-color: #f5f5f5;
+        border-radius: 6px;
+        width: 100%;
+        justify-content: flex-start;
+      }
+      textarea {
+        min-height: 150px;
+        font-size: 13px;
+      }
+      .help-text {
+        font-size: 12px;
       }
       button {
         padding: 12px;
-        font-size: 16px;
+        font-size: 15px;
       }
-      .copy-btn {
+      .clear-btn {
+        flex: 0.4;
+      }
+      th, td {
+        padding: 8px;
         font-size: 13px;
-        padding: 10px 8px;
+      }
+      .summary {
+        padding: 12px;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+      h2 {
+        font-size: 18px;
+      }
+      .section {
+        padding: 12px;
+        margin-top: 15px;
       }
       label {
         font-size: 13px;
-        margin-bottom: 6px;
       }
-      .plus-sign {
-        font-size: 20px;
+      #feetOnlyLabel {
+        font-size: 13px !important;
+      }
+      th, td {
+        padding: 6px;
+        font-size: 12px;
+      }
+      .copy-btn, .export-btn {
+        font-size: 13px;
+        padding: 10px 8px;
       }
     }
 
@@ -255,7 +315,7 @@
 
   <!-- Input Section -->
   <div class="section">
-    <div style="display: flex; align-items: last baseline; gap: 10px; margin-bottom: 8px;">
+    <div class="input-header">
       <label for="input" style="margin: 0;">Input (one per line)</label>
       <label id="feetOnlyLabel" style="display: flex; align-items: center; gap: 5px; font-weight: normal; font-size: 16px; margin: 0; cursor: pointer; white-space: nowrap;">
         <input type="checkbox" id="feetOnly" onchange="updateHelpText()" style="cursor: pointer;">
